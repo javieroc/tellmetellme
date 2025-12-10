@@ -20,8 +20,7 @@ services:
     volumes:
       - ./config:/opt/app/config
       - ./src:/opt/app/src
-      - ./package.json:/opt/package.json
-      - ./yarn.lock:/opt/yarn.lock
+      - ./scripts:/opt/app/scripts
       - ./.env:/opt/app/.env
       - ./public/uploads:/opt/app/public/uploads
     ports:
