@@ -48,8 +48,8 @@ async function seedStories(authors, count = 100) {
           content,
           views: faker.number.int({ min: 0, max: 5000 }),
           author: { connect: randomAuthorId },
-          publishedAt: new Date(),
         },
+        status: 'published'
       })
     );
   }
