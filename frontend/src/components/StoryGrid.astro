@@ -1,0 +1,21 @@
+---
+import type { Story } from "../types";
+import StoryCard from "./StoryCard.astro";
+
+interface Props {
+  stories: Story[];
+}
+
+const { stories } = Astro.props;
+---
+
+<section class="
+  grid gap-6
+  grid-cols-1
+  sm:grid-cols-2
+  lg:grid-cols-3
+">
+  {stories.map((story) => (
+    <StoryCard story={story} />
+  ))}
+</section>

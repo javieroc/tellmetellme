@@ -1,0 +1,54 @@
+---
+import type { Story } from '../types';
+
+interface Props {
+  story: Story;
+}
+
+const CARD_FRAMES = [
+  '/frames/frame1.svg',
+  '/frames/frame2.svg',
+  '/frames/frame3.svg',
+] as const;
+
+const { story } = Astro.props;
+
+const coverUrl = story.coverImage?.url ?? null;
+const authorName = story.author?.name ?? "Unknown";
+const date = new Date(story.publishedAt).toLocaleDateString("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric"
+});
+
+const frameUrl = CARD_FRAMES[Math.floor(Math.random() * CARD_FRAMES.length)];
+---
+
+<article
+  class="card-frame p-4"
+  style={`--card-frame-url: url('${frameUrl}')`}
+>
+  <a href={`/stories/${story.slug}`} class="card-body block">
+    {coverUrl && (
+      <img
+        src={coverUrl}
+        alt={story.title}
+        class="w-full h-40 object-cover rounded-md mb-3"
+      />
+    )}
+
+    <h2 class="font-uncial text-xl mb-2 text-gunmetal">
+      {story.title}
+    </h2>
+
+    <p class="text-sm text-gray-600 mb-2">
+      by {authorName} — {date}
+    </p>
+
+    {story.excerpt && (
+      <p class="text-gray-700 text-sm line-clamp-3">
+        {story.excerpt}
+      </p>
+    )}
+  </a>
+</article>

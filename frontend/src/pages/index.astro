@@ -1,6 +1,8 @@
 ---
 import Layout from '../components/Layout.astro';
-import { client, getStrapiMedia } from '../lib/strapi';
+import StoryGrid from '../components/StoryGrid.astro';
+import { client } from '../lib/strapi';
+import type { Story } from '../types';
 
 const storiesRes = await client.collection('stories').find({
   populate: {
@@ -11,31 +13,14 @@ const storiesRes = await client.collection('stories').find({
   pagination: { pageSize: 20 },
 });
 
-const stories = storiesRes?.data ?? [];
+
+const stories = storiesRes.data;
+console.log('Processed stories:', stories);
 ---
 <Layout title='Tell me Tell me'>
   <h1>Latest Stories</h1>
 
   {stories.length === 0 && <p>No stories yet.</p>}
 
-  <section class="grid">
-    {stories.map((story) => {
-      // Access fields directly, no `attributes`
-      const coverUrl = story.coverImage?.data?.attributes?.url
-        ? getStrapiMedia(story.coverImage.data.attributes.url)
-        : null;
-
-      const authorName = story.author?.data?.attributes?.name ?? 'Unknown';
-
-      return (
-        <article class="card">
-          {coverUrl && <img src={coverUrl} alt={story.title} width="100%" />}
-          <h2>{story.title}</h2>
-          {story.excerpt && <p>{story.excerpt}</p>}
-          <p><em>By {authorName}</em></p>
-          <a href={`/stories/${story.slug}`}>Read →</a>
-        </article>
-      );
-    })}
-  </section>
+  <StoryGrid stories={stories as Story[]} />
 </Layout>

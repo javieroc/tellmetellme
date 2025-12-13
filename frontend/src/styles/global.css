@@ -1,1 +1,53 @@
 @import "tailwindcss";
+
+.shape-border {
+  display: block;
+  width: 100%;
+  position: relative;
+  z-index: 0;
+}
+
+.shape-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: #202424;
+  z-index: -1;
+  pointer-events: none;
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+}
+
+.shape-border-1::before {
+  mask-image: url('/shapes/shape1.svg');
+  -webkit-mask-image: url('/shapes/shape1.svg');
+}
+
+.shape-border-2::before {
+  mask-image: url('/shapes/shape2.svg');
+  -webkit-mask-image: url('/shapes/shape2.svg');
+}
+
+.card-frame {
+  display: block;
+  width: 100%;
+  position: relative;
+  z-index: 0;
+}
+
+.card-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: #202424;
+  mask-image: var(--card-frame-url);
+  -webkit-mask-image: var(--card-frame-url);
+  z-index: -1;
+  pointer-events: none;
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+}
