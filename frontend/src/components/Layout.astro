@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import Hero from "./Hero.astro";
+import Footer from "./Footer.astro";
 import Navbar from "./Navbar.astro";
 
 interface Props {
@@ -30,6 +31,7 @@ const { title } = Astro.props;
         description="A place to collect and share stories about working side by side — in coworking spaces, studios, cafés, and anywhere workaholics become workahomies."
       />
       <slot />
+      <Footer />
     </main>
   </body>
 </html>
