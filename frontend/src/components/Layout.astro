@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import Hero from "./Hero.astro";
 import Navbar from "./Navbar.astro";
 
 interface Props {
@@ -23,6 +24,11 @@ const { title } = Astro.props;
   <body class="min-h-screen bg-[#f8f8ff] text-black antialiased">
     <main class="max-w-4xl mx-auto px-6 py-2">
       <Navbar />
+      <Hero
+        title="Tell Me Tell Me"
+        subtitle="Stories from shared desks and shared lives"
+        description="A place to collect and share stories about working side by side — in coworking spaces, studios, cafés, and anywhere workaholics become workahomies."
+      />
       <slot />
     </main>
   </body>
