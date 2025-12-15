@@ -16,9 +16,9 @@ const storiesRes = await client.collection('stories').find({
 const stories = storiesRes.data as Story[];
 ---
 
-<h1 class="text-2xl">Latest Stories</h1>
+<h1 class="font-uncial text-2xl">Latest Stories</h1>
 
-{stories.length === 0 && <p>No stories yet.</p>}
+{stories.length === 0 && <p class="font-uncial">No stories yet.</p>}
 <section class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
   {stories.map((story) => (
     <StoryCard story={story} />

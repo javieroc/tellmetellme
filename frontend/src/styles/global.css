@@ -1,4 +1,15 @@
+@import "@fontsource/uncial-antiqua";
+@import "@fontsource-variable/inter";
 @import "tailwindcss";
+
+.font-uncial {
+  font-family: "Uncial Antiqua", serif;
+}
+
+.font-body {
+  font-family: "Cinzel Variable", serif;
+}
+
 
 .shape-border {
   display: block;
