@@ -26,7 +26,9 @@ const frameUrl = CARD_FRAMES[Math.floor(Math.random() * CARD_FRAMES.length)];
 
 <article
   class="card-frame p-4"
-  style={`--card-frame-url: url('${frameUrl}')`}
+  style={`
+    --card-frame-url: url('${frameUrl}');
+  `}
 >
   <a href={`/stories/${story.slug}`} class="card-body block">
     {coverUrl && (

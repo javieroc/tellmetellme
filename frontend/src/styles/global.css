@@ -33,16 +33,40 @@
 .card-frame {
   position: relative;
   width: 100%;
+  z-index: 0;
 }
 
+/* ORIGINAL SVG (keeps SVG colors) */
 .card-frame::before {
   content: "";
   position: absolute;
   inset: 0;
+
   background-image: var(--card-frame-url);
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
+
+  pointer-events: none;
+  z-index: -2;
+}
+
+/* COLOR OVERRIDE LAYER (optional) */
+.card-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background-color: var(--frame-color, transparent);
+
+  mask-image: var(--card-frame-url);
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+
+  -webkit-mask-image: var(--card-frame-url);
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+
   pointer-events: none;
   z-index: -1;
 }
