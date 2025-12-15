@@ -1,0 +1,23 @@
+<svg width="360" height="140" viewBox="0 0 360 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 26H75.0132L85.6172 34H119" stroke="#45A4DA" stroke-width="2"/>
+<path d="M0 118H75.0132L85.6172 110H119" stroke="#45A4DA" stroke-width="2"/>
+<path d="M0 54H66.5267L83.1015 66H114" stroke="#45A4DA" stroke-width="2"/>
+<path d="M0 90H66.5267L83.1015 78H114" stroke="#45A4DA" stroke-width="2"/>
+<path d="M0 40H69.9703L79.8614 48H111" stroke="#45A4DA" stroke-width="2"/>
+<path d="M210 40H147.594L138.772 48H111" stroke="#45A4DA" stroke-width="2"/>
+<path d="M0 104H69.9703L79.8614 96H111" stroke="#45A4DA" stroke-width="2"/>
+<path d="M210 104H147.594L138.772 96H111" stroke="#45A4DA" stroke-width="2"/>
+<circle cx="121" cy="34" r="2.5" fill="#45A4DA" stroke="#45A4DA"/>
+<circle cx="3" cy="3" r="2.5" transform="matrix(1 0 0 -1 118 113)" fill="#45A4DA" stroke="#45A4DA"/>
+<circle cx="116" cy="66" r="2.5" fill="#45A4DA" stroke="#45A4DA"/>
+<circle cx="195" cy="73" r="2.5" fill="#45A4DA" stroke="#45A4DA"/>
+<circle cx="3" cy="3" r="2.5" transform="matrix(1 0 0 -1 113 81)" fill="#45A4DA" stroke="#45A4DA"/>
+<circle cx="212" cy="40" r="2.5" stroke="#45A4DA"/>
+<circle cx="3" cy="3" r="2.5" transform="matrix(1 0 0 -1 209 107)" stroke="#45A4DA"/>
+<circle cx="143" cy="57" r="2.5" stroke="#45A4DA"/>
+<circle cx="3" cy="3" r="2.5" transform="matrix(1 0 0 -1 140 90)" stroke="#45A4DA"/>
+<path d="M82 57H140.5" stroke="#45A4DA" stroke-width="2"/>
+<path d="M1 73H59.5" stroke="#45A4DA" stroke-width="2"/>
+<path d="M135 73H193.5" stroke="#45A4DA" stroke-width="2"/>
+<path d="M82 87H140.5" stroke="#45A4DA" stroke-width="2"/>
+</svg>

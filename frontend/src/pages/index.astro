@@ -1,26 +1,8 @@
 ---
 import Layout from '../components/Layout.astro';
 import StoryGrid from '../components/StoryGrid.astro';
-import { client } from '../lib/strapi';
-import type { Story } from '../types';
 
-const storiesRes = await client.collection('stories').find({
-  populate: {
-    coverImage: true,
-    author: true,
-  },
-  sort: ['createdAt:desc'],
-  pagination: { pageSize: 20 },
-});
-
-
-const stories = storiesRes.data;
-console.log('Processed stories:', stories);
 ---
 <Layout title='Tell me Tell me'>
-  <h1>Latest Stories</h1>
-
-  {stories.length === 0 && <p>No stories yet.</p>}
-
-  <StoryGrid stories={stories as Story[]} />
+  <StoryGrid />
 </Layout>

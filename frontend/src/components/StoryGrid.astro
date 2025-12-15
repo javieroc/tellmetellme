@@ -1,20 +1,25 @@
 ---
-import type { Story } from "../types";
 import StoryCard from "./StoryCard.astro";
+import { client } from '../lib/strapi';
+import type { Story } from "../types";
 
-interface Props {
-  stories: Story[];
-}
+const storiesRes = await client.collection('stories').find({
+  populate: {
+    coverImage: true,
+    author: true,
+  },
+  sort: ['createdAt:desc'],
+  pagination: { pageSize: 20 },
+});
 
-const { stories } = Astro.props;
+
+const stories = storiesRes.data as Story[];
 ---
 
-<section class="
-  grid gap-6
-  grid-cols-1
-  sm:grid-cols-2
-  lg:grid-cols-3
-">
+<h1 class="text-2xl">Latest Stories</h1>
+
+{stories.length === 0 && <p>No stories yet.</p>}
+<section class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
   {stories.map((story) => (
     <StoryCard story={story} />
   ))}

@@ -31,23 +31,18 @@
 }
 
 .card-frame {
-  display: block;
-  width: 100%;
   position: relative;
-  z-index: 0;
+  width: 100%;
 }
 
 .card-frame::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-color: #202424;
-  mask-image: var(--card-frame-url);
-  -webkit-mask-image: var(--card-frame-url);
-  z-index: -1;
+  background-image: var(--card-frame-url);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
   pointer-events: none;
-  mask-size: 100% 100%;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
+  z-index: -1;
 }
