@@ -1,0 +1,136 @@
+---
+import type { Story } from "../types";
+import StoryCard from "./StoryCard.astro";
+
+export interface Props {
+  stories: Story[];
+  pageSize: number;
+  pageCount: number;
+}
+
+const { stories, pageSize, pageCount } = Astro.props;
+const STRAPI_URL = import.meta.env.PUBLIC_STRAPI_URL;
+---
+
+<section class="mx-auto max-w-7xl px-4 py-12">
+  <header class="mb-8">
+    <h2 class="text-2xl font-bold text-[#2B6CB0]">Stories</h2>
+    <p class="mt-1 text-lg text-zinc-600">
+      Latest travel stories and experiences
+    </p>
+  </header>
+
+  <div id="stories-grid" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {stories.map((story) => (
+      <StoryCard story={story} />
+    ))}
+  </div>
+
+  <div id="sentinel" class="mt-10 text-center text-zinc-500">
+    Loading more…
+  </div>
+
+  <!-- Hidden template for dynamic stories -->
+  <template id="story-template">
+    <article class="group overflow-hidden rounded-sm border border-zinc-200 bg-white transition hover:shadow-lg">
+      <a href="" class="block h-full">
+        <div class="relative aspect-4/3 overflow-hidden bg-zinc-100">
+          <img class="story-image h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          <div class="story-no-image flex h-full w-full items-center justify-center text-sm text-zinc-400 hidden">No image</div>
+        </div>
+
+        <div class="flex h-full flex-col gap-3 p-5">
+          <h3 class="story-title text-lg font-semibold leading-snug text-[#2B6CB0] group-hover:underline"></h3>
+          <p class="story-excerpt line-clamp-3 text-md text-zinc-600"></p>
+          <div class="mt-auto flex items-center justify-between text-xs text-zinc-500">
+            <time class="story-date"></time>
+            <span class="story-views"></span>
+          </div>
+        </div>
+      </a>
+    </article>
+  </template>
+</section>
+
+<script define:vars={{ pageSize, pageCount, strapiUrl: STRAPI_URL }}>
+  let page = 1;
+  let loading = false;
+
+  const grid = document.getElementById("stories-grid");
+  const sentinel = document.getElementById("sentinel");
+  const template = document.getElementById("story-template");
+
+  if (!grid || !sentinel || !(template instanceof HTMLTemplateElement)) {
+    console.warn("StoriesGrid: missing DOM nodes or template");
+    return;
+  }
+
+  async function loadMore() {
+    if (loading || page >= pageCount) return;
+    loading = true;
+    page++;
+
+    try {
+      const res = await fetch(
+        `${strapiUrl}/stories` +
+          `?pagination[page]=${page}` +
+          `&pagination[pageSize]=${pageSize}` +
+          `&sort[0]=createdAt:desc` +
+          `&populate[coverImage]=true&populate[author]=true`
+      );
+
+      const json = await res.json();
+
+      json.data.forEach((story) => {
+        const clone = template.content.cloneNode(true);
+
+        const link = clone.querySelector("a");
+        if (link) link.href = `/stories/${story.slug}`;
+
+        const img = clone.querySelector(".story-image");
+        const noImg = clone.querySelector(".story-no-image");
+        if (story.coverImage?.url) {
+          if (img) img.src = story.coverImage.url;
+          if (noImg) noImg.classList.add("hidden");
+        } else {
+          if (img) img.remove();
+          if (noImg) noImg.classList.remove("hidden");
+        }
+
+        const titleEl = clone.querySelector(".story-title");
+        if (titleEl) titleEl.textContent = story.title;
+
+        const excerptEl = clone.querySelector(".story-excerpt");
+        if (excerptEl) excerptEl.textContent = story.excerpt || "";
+
+        const dateEl = clone.querySelector(".story-date");
+        if (dateEl && story.publishedAt) {
+          dateEl.textContent = new Date(story.publishedAt).toLocaleDateString();
+          dateEl.setAttribute("datetime", story.publishedAt);
+        }
+
+        const viewsEl = clone.querySelector(".story-views");
+        if (viewsEl && typeof story.views === "number") {
+          viewsEl.textContent = `${story.views.toLocaleString()} views`;
+        }
+
+        grid.appendChild(clone);
+      });
+
+      if (page >= pageCount) {
+        sentinel.textContent = "No more stories";
+        observer.disconnect();
+      }
+    } catch (err) {
+      console.error("Failed to load stories", err);
+    } finally {
+      loading = false;
+    }
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0]?.isIntersecting) loadMore();
+  });
+
+  observer.observe(sentinel);
+</script>
