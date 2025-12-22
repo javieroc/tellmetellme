@@ -1,0 +1,69 @@
+---
+import "../styles/global.css";
+
+const images = [
+  "/auth/vanlife1.jpg",
+  "/auth/vanlife2.jpg",
+  "/auth/vanlife3.jpg",
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Tell Me Tell Me</title>
+  </head>
+
+  <body class="h-screen w-screen overflow-hidden">
+    <div class="flex h-full w-full">
+      {/* Left image panel */}
+      <div class="relative hidden w-1/2 lg:block">
+        {images.map((src, i) => (
+          <img
+            src={src}
+            class={`auth-image absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
+              i === 0 ? "opacity-100" : "opacity-0"
+            }`}
+            loading="eager"
+            alt="Travel story"
+          />
+        ))}
+      </div>
+
+      {/* Right content panel */}
+      <div class="flex w-full flex-col items-center justify-center bg-white px-6 lg:w-1/2">
+        <div class="w-full max-w-md">
+          {/* Logo */}
+          <div class="mb-10 text-center">
+            <img
+              src="/logo.svg"
+              alt="Tell Me Tell Me"
+              class="mx-auto h-10 w-auto"
+            />
+          </div>
+
+          {/* Slot for forms */}
+          <slot />
+        </div>
+      </div>
+    </div>
+
+    {/* Image rotation script */}
+    <script>
+      const images = document.querySelectorAll(".auth-image");
+      let current = 0;
+
+      setInterval(() => {
+        images[current].classList.remove("opacity-100");
+        images[current].classList.add("opacity-0");
+
+        current = (current + 1) % images.length;
+
+        images[current].classList.remove("opacity-0");
+        images[current].classList.add("opacity-100");
+      }, 10000);
+    </script>
+  </body>
+</html>

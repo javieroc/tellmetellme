@@ -1,5 +1,5 @@
-<nav class="w-full bg-white relative">
-  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+<nav class="relative w-full bg-white">
+  <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
     <a href="/" class="flex items-center">
       <img
         src="/logo.svg"
@@ -23,33 +23,59 @@
         About Us
       </a>
 
-      <a
-        href="/signin"
+      <button
+        type="button"
+        onclick="window.location.href='/signin'"
         class="
+          cursor-pointer
+          rounded-full
+          border-2 border-[#2B6CB0]
           px-4 py-2
           font-bold
-          rounded-full
-          bg-[#2B6CB0]
-          text-white
+          text-[#2B6CB0]
           transition
-          hover:bg-[#2C5282]
+          duration-150
+          hover:bg-[#2B6CB0]
+          hover:text-white
+          active:scale-95
+          focus-visible:outline-none
+          focus-visible:ring-2
+          focus-visible:ring-[#2B6CB0]
+          focus-visible:ring-offset-2
         "
       >
         Sign In
-      </a>
+      </button>
+
+      <button
+        type="button"
+        onclick="window.location.href='/signup'"
+        class="
+          cursor-pointer
+          rounded-full
+          bg-[#2B6CB0]
+          px-4 py-2
+          font-bold
+          text-white
+          transition
+          duration-150
+          hover:bg-[#2C5282]
+          active:scale-95
+          focus-visible:outline-none
+          focus-visible:ring-2
+          focus-visible:ring-[#2B6CB0]
+          focus-visible:ring-offset-2
+        "
+      >
+        Sign Up
+      </button>
     </div>
   </div>
 
   <div
     class="
-      absolute
-      bottom-0
-      left-0
-      w-full
-      h-0.5
-      bg-gradient-to-r
-      from-[#ED8936]
-      to-[#2B6CB0]
+      absolute bottom-0 left-0 h-0.5 w-full
+      bg-gradient-to-r from-[#ED8936] to-[#2B6CB0]
     "
   ></div>
 </nav>

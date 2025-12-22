@@ -1,0 +1,95 @@
+---
+import AuthLayout from "../layouts/AuthLayout.astro";
+import { signUp } from "../lib/auth";
+
+let error = "";
+
+if (Astro.request.method === "POST") {
+  const form = await Astro.request.formData();
+
+  const username = String(form.get("username"));
+  const email = String(form.get("email"));
+  const password = String(form.get("password"));
+
+  try {
+    const { jwt } = await signUp(username, email, password);
+
+    Astro.cookies.set("jwt", jwt, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: import.meta.env.PROD,
+    });
+
+    return Astro.redirect("/");
+  } catch {
+    error = "Could not create account";
+  }
+}
+---
+
+<AuthLayout>
+  <div class="rounded-sm border border-zinc-200 bg-white p-8 shadow-sm">
+    <h1 class="mb-2 text-2xl font-bold text-[#2B6CB0]">
+      Create an account
+    </h1>
+
+    <p class="mb-6 text-zinc-600">
+      Join Tell Me Tell Me
+    </p>
+
+    {error && (
+      <p class="mb-4 text-sm text-red-600">{error}</p>
+    )}
+
+    <form method="POST" class="space-y-4">
+      <input
+        name="username"
+        required
+        placeholder="Username"
+        class="w-full rounded-sm border border-zinc-300 px-4 py-2 focus:border-[#2B6CB0] focus:outline-none"
+      />
+
+      <input
+        name="email"
+        type="email"
+        required
+        placeholder="Email"
+        class="w-full rounded-sm border border-zinc-300 px-4 py-2 focus:border-[#2B6CB0] focus:outline-none"
+      />
+
+      <input
+        name="password"
+        type="password"
+        required
+        placeholder="Password"
+        class="w-full rounded-sm border border-zinc-300 px-4 py-2 focus:border-[#2B6CB0] focus:outline-none"
+      />
+
+      <button
+        type="submit"
+        class="
+          w-full
+          cursor-pointer
+          rounded-sm
+          bg-[#2B6CB0]
+          px-4 py-2
+          font-bold
+          text-white
+          transition
+          hover:bg-[#2C5282]
+          active:scale-95
+        "
+      >
+        Sign Up
+      </button>
+    </form>
+
+    <p class="mt-6 text-center text-sm text-zinc-500">
+      Already have an account?
+      <a href="/signin" class="font-bold text-[#DD6B20] hover:underline">
+        Sign in
+      </a>
+    </p>
+  </div>
+</AuthLayout>
