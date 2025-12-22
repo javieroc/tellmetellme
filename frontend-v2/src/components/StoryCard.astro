@@ -1,16 +1,27 @@
 ---
-import type { Story } from '../types'
+import type { Story } from '../types';
 
 export interface Props {
-  story: Story
+  story: Story;
 }
 
-const { story } = Astro.props
+const { story } = Astro.props;
+
+const authorName = story.author?.name ?? 'Unknown author';
+
+const formattedViews =
+  typeof story.views === 'number'
+    ? story.views.toLocaleString()
+    : '0';
+
+const publishedDate = story.publishedAt
+  ? new Date(story.publishedAt).toLocaleDateString()
+  : null;
 ---
 
 <article class="group overflow-hidden rounded-sm border border-zinc-200 bg-white transition hover:shadow-lg">
   <a href={`/stories/${story.slug}`} class="block h-full">
-    <div class="relative aspect-[4/3] overflow-hidden bg-zinc-100">
+    <div class="relative aspect-4/3 overflow-hidden bg-zinc-100">
       {story.coverImage?.url ? (
         <img
           src={story.coverImage.url}
@@ -30,16 +41,22 @@ const { story } = Astro.props
         {story.title}
       </h3>
 
+      <p class="text-xs text-zinc-500">
+        Created by <span class="font-medium text-zinc-700">{authorName}</span>
+      </p>
+
       <p class="line-clamp-3 text-md text-zinc-600">
         {story.excerpt}
       </p>
 
       <div class="mt-auto flex items-center justify-between text-xs text-zinc-500">
-        <time datetime={story.publishedAt}>
-          {new Date(story.publishedAt).toLocaleDateString()}
-        </time>
+        {publishedDate && (
+          <time datetime={story.publishedAt}>
+            {publishedDate}
+          </time>
+        )}
 
-        <span>{story.views.toLocaleString()} views</span>
+        <span>{formattedViews} views</span>
       </div>
     </div>
   </a>
