@@ -2,6 +2,35 @@
 
 const { faker } = require('@faker-js/faker');
 
+const COVER_IMAGE_URL =
+  'https://res.cloudinary.com/dozd3b29e/image/upload/v1766324584/tellmetellme/vanlife1_a7a7792a0c.jpg';
+
+async function createCoverImage() {
+  // Always create the file entry in the database
+  const file = await strapi.db.query('plugin::upload.file').create({
+    data: {
+      name: 'vanlife1.jpg',
+      alternativeText: 'Vanlife Cover Image',
+      caption: 'Vanlife Cover Image',
+      hash: 'vanlife1',
+      ext: '.jpg',
+      mime: 'image/jpeg',
+      size: 123, // fake size in KB
+      url: COVER_IMAGE_URL,
+      provider: 'cloudinary',
+      provider_metadata: {
+        public_id: 'tellmetellme/vanlife1_a7a7792a0c',
+        resource_type: 'image',
+        version_id: null,
+        signature: null,
+        format: 'jpg',
+      },
+    },
+  });
+
+  return file;
+}
+
 async function seedAuthors(count = 10) {
   console.log(`🌱 Seeding ${count} authors...`);
 
@@ -25,31 +54,34 @@ async function seedAuthors(count = 10) {
   return authors;
 }
 
-async function seedStories(authors, count = 100) {
+async function seedStories(authors, coverImage, count = 100) {
   console.log(`🌱 Seeding ${count} stories...`);
 
-  const authorIds = authors.map(a => a.id);
+  const authorIds = authors.map((a) => a.id);
   const tasks = [];
 
   for (let i = 0; i < count; i++) {
     const title = faker.lorem.sentence(5).replace('.', '');
     const slug = faker.helpers.slugify(title).toLowerCase();
-    const excerpt = faker.lorem.sentence(12);
-    const content = faker.lorem.paragraphs(4, '\n\n');
 
-    const randomAuthorId = authorIds[Math.floor(Math.random() * authorIds.length)];
+    const randomAuthorId =
+      authorIds[Math.floor(Math.random() * authorIds.length)];
 
     tasks.push(
       strapi.documents('api::story.story').create({
         data: {
           title,
           slug,
-          excerpt,
-          content,
+          excerpt: faker.lorem.sentence(12),
+          content: faker.lorem.paragraphs(4, '\n\n'),
           views: faker.number.int({ min: 0, max: 5000 }),
+
+          // assign the same cover image to all stories
+          coverImage: [coverImage.id],
+
           author: { connect: randomAuthorId },
         },
-        status: 'published'
+        status: 'published',
       })
     );
   }
@@ -69,8 +101,9 @@ async function main() {
 
   app.log.level = 'error';
 
+  const coverImage = await createCoverImage();
   const authors = await seedAuthors(10);
-  await seedStories(authors, 100);
+  await seedStories(authors, coverImage, 100);
 
   await app.destroy();
   process.exit(0);
