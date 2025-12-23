@@ -1,46 +1,15 @@
 ---
 import AuthLayout from "../layouts/AuthLayout.astro";
-import { signIn } from "../lib/auth";
-
-let error = "";
-
-if (Astro.request.method === "POST") {
-  const form = await Astro.request.formData();
-  const email = String(form.get("email"));
-  const password = String(form.get("password"));
-
-  try {
-    const { jwt } = await signIn(email, password);
-
-    Astro.cookies.set("jwt", jwt, {
-      path: "/",
-      httpOnly: true,
-      sameSite: "lax",
-      secure: import.meta.env.PROD,
-    });
-
-    return Astro.redirect("/");
-  } catch {
-    error = "Invalid email or password";
-  }
-}
 ---
 
 <AuthLayout>
   <div class="rounded-sm border border-zinc-200 bg-white p-8 shadow-sm">
-    <h1 class="mb-2 text-2xl font-bold text-[#2B6CB0]">
-      Sign in
-    </h1>
+    <h1 class="mb-2 text-2xl font-bold text-[#2B6CB0]">Sign in</h1>
+    <p class="mb-6 text-zinc-600">Welcome back to Tell Me Tell Me</p>
 
-    <p class="mb-6 text-zinc-600">
-      Welcome back to Tell Me Tell Me
-    </p>
+    <p id="error" class="mb-4 hidden text-sm text-red-600"></p>
 
-    {error && (
-      <p class="mb-4 text-sm text-red-600">{error}</p>
-    )}
-
-    <form method="POST" class="space-y-4">
+    <form id="signin-form" class="space-y-4">
       <input
         name="email"
         type="email"
@@ -48,7 +17,6 @@ if (Astro.request.method === "POST") {
         placeholder="Email"
         class="w-full rounded-sm border border-zinc-300 px-4 py-2 focus:border-[#2B6CB0] focus:outline-none"
       />
-
       <input
         name="password"
         type="password"
@@ -56,21 +24,9 @@ if (Astro.request.method === "POST") {
         placeholder="Password"
         class="w-full rounded-sm border border-zinc-300 px-4 py-2 focus:border-[#2B6CB0] focus:outline-none"
       />
-
       <button
         type="submit"
-        class="
-          w-full
-          cursor-pointer
-          rounded-sm
-          bg-[#2B6CB0]
-          px-4 py-2
-          font-bold
-          text-white
-          transition
-          hover:bg-[#2C5282]
-          active:scale-95
-        "
+        class="w-full cursor-pointer rounded-sm bg-[#2B6CB0] px-4 py-2 font-bold text-white transition hover:bg-[#2C5282] active:scale-95"
       >
         Sign In
       </button>
@@ -78,9 +34,9 @@ if (Astro.request.method === "POST") {
 
     <p class="mt-6 text-center text-sm text-zinc-500">
       Don’t have an account?
-      <a href="/signup" class="font-bold text-[#DD6B20] hover:underline">
-        Sign up
-      </a>
+      <a href="/signup" class="font-bold text-[#DD6B20] hover:underline">Sign up</a>
     </p>
   </div>
+
+  <script src="../scripts/signin.ts"></script>
 </AuthLayout>
