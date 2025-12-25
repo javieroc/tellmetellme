@@ -39,6 +39,11 @@
       "relation": "oneToMany",
       "target": "api::story.story",
       "mappedBy": "author"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }

@@ -6,7 +6,6 @@ const COVER_IMAGE_URL =
   'https://res.cloudinary.com/dozd3b29e/image/upload/v1766324584/tellmetellme/vanlife1_a7a7792a0c.jpg';
 
 async function createCoverImage() {
-  // Always create the file entry in the database
   const file = await strapi.db.query('plugin::upload.file').create({
     data: {
       name: 'vanlife1.jpg',
@@ -15,7 +14,7 @@ async function createCoverImage() {
       hash: 'vanlife1',
       ext: '.jpg',
       mime: 'image/jpeg',
-      size: 123, // fake size in KB
+      size: 123,
       url: COVER_IMAGE_URL,
       provider: 'cloudinary',
       provider_metadata: {
@@ -31,26 +30,86 @@ async function createCoverImage() {
   return file;
 }
 
-async function seedAuthors(count = 10) {
-  console.log(`🌱 Seeding ${count} authors...`);
+const AVATAR_IMAGE_URL =
+  'https://res.cloudinary.com/dozd3b29e/image/upload/v1766574499/tellmetellme/saitama_347ea677bc.jpg';
+
+  async function createAvatarImage() {
+  const file = await strapi.db.query('plugin::upload.file').create({
+    data: {
+      name: 'saitama.jpg',
+      alternativeText: 'Author Avatar',
+      caption: 'Author Avatar',
+      hash: 'saitama',
+      ext: '.jpg',
+      mime: 'image/jpeg',
+      size: 64,
+      url: AVATAR_IMAGE_URL,
+      provider: 'cloudinary',
+      provider_metadata: {
+        public_id: 'tellmetellme/saitama_347ea677bc',
+        resource_type: 'image',
+        version_id: null,
+        signature: null,
+        format: 'jpg',
+      },
+    },
+  });
+
+  return file;
+}
+
+async function seedAuthors(avatarImage, count = 10) {
+  console.log(`🌱 Seeding ${count} users + authors...`);
 
   const authors = [];
 
+  const userService = strapi
+    .plugin('users-permissions')
+    .service('user');
+
+  const authenticatedRole = await strapi.db
+    .query('plugin::users-permissions.role')
+    .findOne({
+      where: { type: 'authenticated' },
+    });
+
+  if (!authenticatedRole) {
+    throw new Error('Authenticated role not found');
+  }
+
   for (let i = 0; i < count; i++) {
-    const name = faker.person.fullName();
+    const fullName = faker.person.fullName();
+    const firstName = fullName.split(' ')[0];
+
+    const email = faker.internet.email({ firstName }).toLowerCase();
+    const username = faker.internet.username().toLowerCase();
+
+    const user = await userService.add({
+      username,
+      email,
+      password: 'Password123#',
+      provider: 'local',
+      confirmed: true,
+      blocked: false,
+      role: authenticatedRole.id,
+    });
 
     const author = await strapi.documents('api::author.author').create({
       data: {
-        name,
-        email: faker.internet.email({ firstName: name.split(' ')[0] }),
+        name: fullName,
+        email,
         bio: faker.lorem.paragraph(),
+        user: {
+          connect: user.id,
+        },
+        avatar: avatarImage.id,
       },
     });
 
     authors.push(author);
   }
 
-  console.log(`✨ Created ${authors.length} authors`);
+  console.log(`✨ Created ${authors.length} users + authors`);
   return authors;
 }
 
@@ -75,8 +134,6 @@ async function seedStories(authors, coverImage, count = 100) {
           excerpt: faker.lorem.sentence(12),
           content: faker.lorem.paragraphs(4, '\n\n'),
           views: faker.number.int({ min: 0, max: 5000 }),
-
-          // assign the same cover image to all stories
           coverImage: [coverImage.id],
 
           author: { connect: randomAuthorId },
@@ -90,9 +147,6 @@ async function seedStories(authors, coverImage, count = 100) {
   console.log(`✨ Created ${count} stories`);
 }
 
-/**
- * Main entrypoint
- */
 async function main() {
   const { createStrapi, compileStrapi } = require('@strapi/strapi');
 
@@ -102,7 +156,8 @@ async function main() {
   app.log.level = 'error';
 
   const coverImage = await createCoverImage();
-  const authors = await seedAuthors(10);
+  const avatarImage = await createAvatarImage();
+  const authors = await seedAuthors(avatarImage, 10);
   await seedStories(authors, coverImage, 100);
 
   await app.destroy();
