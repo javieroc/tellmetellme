@@ -16,7 +16,6 @@ const storiesRes = await client.collection('stories').find({
   pagination: { page: 1, pageSize: PAGE_SIZE },
 });
 
-console.log(storiesRes);
 const stories = storiesRes.data as Story[];
 const pagination = storiesRes.meta.pagination;
 ---

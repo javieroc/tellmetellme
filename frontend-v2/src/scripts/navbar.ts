@@ -7,12 +7,58 @@ function initNavbar() {
   if (isLoggedIn()) {
     const user = getUser();
 
+    const authorName =
+      user?.author?.name || user?.username || "Dashboard";
+
+    const avatarUrl = user?.author?.avatar?.url;
+
     authContainer.innerHTML = `
       <a
-        href="/profile"
-        class="font-bold text-[#2B6CB0] hover:underline"
+        href="/dashboard"
+        class="
+          group
+          flex items-center gap-3
+          rounded-full
+          px-2 py-1
+          transition
+          hover:bg-neutral-100
+        "
       >
-        ${user?.username ?? "Profile"}
+        ${
+          avatarUrl
+            ? `
+              <img
+                src="${avatarUrl}"
+                alt="${authorName}"
+                class="h-8 w-8 rounded-full object-cover"
+              />
+            `
+            : `
+              <div
+                class="
+                  flex h-8 w-8 items-center justify-center
+                  rounded-full
+                  bg-[#2B6CB0]
+                  text-sm
+                  font-bold
+                  text-white
+                "
+              >
+                ${authorName.charAt(0).toUpperCase()}
+              </div>
+            `
+        }
+
+        <span
+          class="
+            text-sm
+            font-bold
+            text-[#2B6CB0]
+            group-hover:underline
+          "
+        >
+          ${authorName}
+        </span>
       </a>
 
       <button
@@ -34,7 +80,9 @@ function initNavbar() {
       </button>
     `;
 
-    document.getElementById("logout-btn")?.addEventListener("click", logout);
+    document
+      .getElementById("logout-btn")
+      ?.addEventListener("click", logout);
   } else {
     authContainer.innerHTML = `
       <button

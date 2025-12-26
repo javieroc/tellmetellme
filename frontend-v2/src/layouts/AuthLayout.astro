@@ -18,7 +18,6 @@ const images = [
 
   <body class="h-screen w-screen overflow-hidden">
     <div class="flex h-full w-full">
-      {/* Left image panel */}
       <div class="relative hidden w-1/2 lg:block">
         {images.map((src, i) => (
           <img
@@ -32,10 +31,8 @@ const images = [
         ))}
       </div>
 
-      {/* Right content panel */}
       <div class="flex w-full flex-col items-center justify-center bg-white px-6 lg:w-1/2">
         <div class="w-full max-w-md">
-          {/* Logo */}
           <div class="mb-10 text-center">
             <img
               src="/logo.svg"
@@ -44,13 +41,11 @@ const images = [
             />
           </div>
 
-          {/* Slot for forms */}
           <slot />
         </div>
       </div>
     </div>
 
-    {/* Image rotation script */}
     <script>
       const images = document.querySelectorAll(".auth-image");
       let current = 0;

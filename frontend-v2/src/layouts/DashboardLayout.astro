@@ -1,0 +1,110 @@
+---
+import "../styles/global.css";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Dashboard · Tell Me Tell Me</title>
+  </head>
+
+  <body class="h-screen w-screen bg-neutral-50 text-neutral-900">
+    <div class="flex h-full w-full">
+      
+      <!-- Sidebar -->
+      <aside class="hidden w-64 flex-col border-r border-neutral-200 bg-white lg:flex">
+        <!-- Sidebar header -->
+        <div class="relative flex h-16 items-center justify-center">
+          <img src="/logo.svg" alt="Tell Me Tell Me" class="h-8" />
+
+          <!-- Gradient border to align with navbar -->
+           <div
+            class="absolute bottom-0 left-0 h-0.5 w-full
+                  bg-[linear-gradient(to_right,#ED8936,#2B6CB0)]
+                  bg-[length:calc(100vw)_100%]
+                  bg-left"
+          ></div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 space-y-2 px-4 py-6">
+          <a
+            href="/dashboard"
+            class="block rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
+          >
+            Overview
+          </a>
+
+          <a
+            href="/dashboard/profile"
+            class="block rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
+          >
+            Profile
+          </a>
+
+          <a
+            href="/dashboard/articles"
+            class="block rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
+          >
+            Articles
+          </a>
+
+          <a
+            href="/dashboard/stories"
+            class="block rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
+          >
+            Stories
+          </a>
+        </nav>
+
+        <!-- Sidebar footer -->
+        <div class="border-t border-neutral-200 p-4">
+          <form method="post" action="/logout">
+            <button
+              class="w-full rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800"
+            >
+              Sign out
+            </button>
+          </form>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <div class="flex flex-1 flex-col overflow-hidden">
+        <!-- Top bar / Navbar -->
+        <header class="relative flex h-16 items-center justify-between bg-white px-6">
+          <div class="flex items-center gap-3">
+            <img
+              src="/logo.svg"
+              alt="Tell Me Tell Me"
+              class="h-7 lg:hidden"
+            />
+            <span class="hidden text-sm font-semibold lg:block">
+              Dashboard
+            </span>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <!-- Avatar placeholder -->
+            <div class="h-8 w-8 rounded-full bg-neutral-200"></div>
+          </div>
+
+          <!-- Gradient border (navbar bottom) -->
+          <div
+            class="absolute bottom-0 left-0 h-0.5 w-full
+                  bg-[linear-gradient(to_right,#ED8936,#2B6CB0)]
+                  bg-[length:calc(100vw)_100%]
+                  bg-[position:-256px_0]"
+          ></div>
+        </header>
+
+        <!-- Page content -->
+        <main class="flex-1 overflow-y-auto p-6">
+          <slot />
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
