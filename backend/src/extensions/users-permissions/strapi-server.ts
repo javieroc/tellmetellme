@@ -31,7 +31,9 @@ export default (plugin) => {
           data: {
             name: user.username,
             email: user.email,
-            user: user.id,
+            user: {
+              connect: user.id,
+            },
           },
         });
 

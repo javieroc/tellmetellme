@@ -7,15 +7,12 @@ import "../styles/global.css";
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>Dashboard · Tell Me Tell Me</title>
+    <title>Dashboard - Tell Me Tell Me</title>
   </head>
 
   <body class="h-screen w-screen bg-neutral-50 text-neutral-900">
     <div class="flex h-full w-full">
-      
-      <!-- Sidebar -->
       <aside class="hidden w-64 flex-col border-r border-neutral-200 bg-white lg:flex">
-        <!-- Sidebar header -->
         <div class="relative flex h-16 items-center justify-center">
           <img src="/logo.svg" alt="Tell Me Tell Me" class="h-8" />
 
@@ -28,7 +25,6 @@ import "../styles/global.css";
           ></div>
         </div>
 
-        <!-- Navigation -->
         <nav class="flex-1 space-y-2 px-4 py-6">
           <a
             href="/dashboard"
@@ -45,13 +41,6 @@ import "../styles/global.css";
           </a>
 
           <a
-            href="/dashboard/articles"
-            class="block rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
-          >
-            Articles
-          </a>
-
-          <a
             href="/dashboard/stories"
             class="block rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
           >
@@ -59,7 +48,6 @@ import "../styles/global.css";
           </a>
         </nav>
 
-        <!-- Sidebar footer -->
         <div class="border-t border-neutral-200 p-4">
           <form method="post" action="/logout">
             <button
@@ -71,7 +59,6 @@ import "../styles/global.css";
         </div>
       </aside>
 
-      <!-- Main content -->
       <div class="flex flex-1 flex-col overflow-hidden">
         <!-- Top bar / Navbar -->
         <header class="relative flex h-16 items-center justify-between bg-white px-6">
@@ -87,7 +74,6 @@ import "../styles/global.css";
           </div>
 
           <div class="flex items-center gap-4">
-            <!-- Avatar placeholder -->
             <div class="h-8 w-8 rounded-full bg-neutral-200"></div>
           </div>
 
@@ -100,7 +86,6 @@ import "../styles/global.css";
           ></div>
         </header>
 
-        <!-- Page content -->
         <main class="flex-1 overflow-y-auto p-6">
           <slot />
         </main>

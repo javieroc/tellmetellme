@@ -5,9 +5,11 @@ export type AuthResponse = {
   user: any;
 };
 
-function saveSession(data: AuthResponse) {
+async function saveSessionWithMe(data: AuthResponse) {
   localStorage.setItem("jwt", data.jwt);
-  localStorage.setItem("user", JSON.stringify(data.user));
+
+  const fullUser = await fetchMe(data.jwt);
+  localStorage.setItem("user", JSON.stringify(fullUser));
 }
 
 export async function signIn(identifier: string, password: string): Promise<AuthResponse> {
@@ -22,7 +24,7 @@ export async function signIn(identifier: string, password: string): Promise<Auth
   }
 
   const data = await res.json();
-  saveSession(data);
+  await saveSessionWithMe(data);
   return data;
 }
 
@@ -42,7 +44,7 @@ export async function signUp(
   }
 
   const data = await res.json();
-  saveSession(data);
+  await saveSessionWithMe(data);
   return data;
 }
 
@@ -63,4 +65,21 @@ export function getUser() {
 
 export function getToken(): string | null {
   return localStorage.getItem("jwt");
+}
+
+async function fetchMe(jwt: string) {
+  const res = await fetch(
+    `${STRAPI_URL}/users/me?populate=author`,
+    {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch user");
+  }
+
+  return res.json();
 }
