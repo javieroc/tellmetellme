@@ -12,16 +12,34 @@ import "../styles/global.css";
 
   <body class="h-screen w-screen bg-neutral-50 text-neutral-900">
     <div class="flex h-full w-full">
-      <aside class="hidden w-64 flex-col border-r border-neutral-200 bg-white lg:flex">
+
+      <!-- Mobile overlay -->
+      <div
+        id="sidebar-overlay"
+        class="fixed inset-0 z-40 hidden bg-black/40 lg:hidden"
+      ></div>
+
+      <!-- Sidebar -->
+      <aside
+        id="dashboard-sidebar"
+        class="
+          fixed inset-y-0 left-0 z-50
+          w-64 flex-col bg-white
+          border-r border-neutral-200
+          transform -translate-x-full
+          transition-transform duration-300
+          lg:static lg:flex lg:translate-x-0
+        "
+      >
         <div class="relative flex h-16 items-center justify-center">
           <img src="/logo.svg" alt="Tell Me Tell Me" class="h-8" />
 
-          <!-- Gradient border to align with navbar -->
-           <div
+          <!-- Gradient border aligned with navbar -->
+          <div
             class="absolute bottom-0 left-0 h-0.5 w-full
-                  bg-[linear-gradient(to_right,#ED8936,#2B6CB0)]
-                  bg-[length:calc(100vw)_100%]
-                  bg-left"
+                   bg-[linear-gradient(to_right,#ED8936,#2B6CB0)]
+                   bg-[length:calc(100vw)_100%]
+                   bg-left"
           ></div>
         </div>
 
@@ -49,43 +67,65 @@ import "../styles/global.css";
         </nav>
 
         <div class="border-t border-neutral-200 p-4">
-          <form method="post" action="/logout">
-            <button
-              class="w-full rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800"
-            >
-              Sign out
-            </button>
-          </form>
+          <button
+            id="sidebar-logout"
+            class="w-full rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800"
+          >
+            Sign out
+          </button>
         </div>
       </aside>
 
+      <!-- Main -->
       <div class="flex flex-1 flex-col overflow-hidden">
-        <!-- Top bar / Navbar -->
+
+        <!-- Navbar -->
         <header class="relative flex h-16 items-center justify-between bg-white px-6">
           <div class="flex items-center gap-3">
-            <img
-              src="/logo.svg"
-              alt="Tell Me Tell Me"
-              class="h-7 lg:hidden"
-            />
+
+            <!-- Hamburger (mobile only) -->
+            <button
+              id="sidebar-toggle"
+              class="rounded-lg p-2 hover:bg-neutral-100 lg:hidden"
+              aria-label="Open menu"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
+
             <span class="hidden text-sm font-semibold lg:block">
               Dashboard
             </span>
           </div>
 
-          <div class="flex items-center gap-4">
-            <div class="h-8 w-8 rounded-full bg-neutral-200"></div>
-          </div>
+          <!-- User info -->
+          <div id="dashboard-user" class="flex items-center"></div>
 
-          <!-- Gradient border (navbar bottom) -->
+          <!-- Gradient border -->
           <div
             class="absolute bottom-0 left-0 h-0.5 w-full
-                  bg-[linear-gradient(to_right,#ED8936,#2B6CB0)]
-                  bg-[length:calc(100vw)_100%]
-                  bg-[position:-256px_0]"
+                   bg-[linear-gradient(to_right,#ED8936,#2B6CB0)]
+                   bg-[length:calc(100vw)_100%]
+                   bg-[position:-256px_0]"
           ></div>
+
+          <script src="../scripts/dashboard-navbar.ts"></script>
+          <script src="../scripts/dashboard-sidebar.ts"></script>
         </header>
 
+        <!-- Content -->
         <main class="flex-1 overflow-y-auto p-6">
           <slot />
         </main>

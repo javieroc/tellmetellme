@@ -69,7 +69,7 @@ export function getToken(): string | null {
 
 async function fetchMe(jwt: string) {
   const res = await fetch(
-    `${STRAPI_URL}/users/me?populate=author`,
+    `${STRAPI_URL}/users/me?populate[author][populate]=avatar`,
     {
       headers: {
         Authorization: `Bearer ${jwt}`,
