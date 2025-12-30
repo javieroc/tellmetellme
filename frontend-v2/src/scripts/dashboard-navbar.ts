@@ -1,4 +1,4 @@
-import { isLoggedIn, getUser, logout } from "../lib/auth";
+import { isLoggedIn, getUser } from "../lib/auth";
 
 function initDashboardNavbar() {
   const container = document.getElementById("dashboard-user");

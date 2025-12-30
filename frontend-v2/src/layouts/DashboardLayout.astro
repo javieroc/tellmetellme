@@ -7,19 +7,18 @@ import "../styles/global.css";
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    <meta name="astro-view-transitions" />
     <title>Dashboard - Tell Me Tell Me</title>
   </head>
 
   <body class="h-screen w-screen bg-neutral-50 text-neutral-900">
     <div class="flex h-full w-full">
 
-      <!-- Mobile overlay -->
       <div
         id="sidebar-overlay"
         class="fixed inset-0 z-40 hidden bg-black/40 lg:hidden"
       ></div>
 
-      <!-- Sidebar -->
       <aside
         id="dashboard-sidebar"
         class="
@@ -45,6 +44,7 @@ import "../styles/global.css";
 
         <nav class="flex-1 space-y-2 px-4 py-6">
           <a
+            data-astro-transition
             href="/dashboard"
             class="block rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
           >
@@ -52,6 +52,7 @@ import "../styles/global.css";
           </a>
 
           <a
+            data-astro-transition
             href="/dashboard/profile"
             class="block rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
           >
@@ -59,6 +60,7 @@ import "../styles/global.css";
           </a>
 
           <a
+            data-astro-transition
             href="/dashboard/stories"
             class="block rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
           >
@@ -69,21 +71,18 @@ import "../styles/global.css";
         <div class="border-t border-neutral-200 p-4">
           <button
             id="sidebar-logout"
-            class="w-full rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800"
+            class="w-full cursor-pointer rounded-full border-2 border-[#2B6CB0] px-4 py-2 font-bold text-[#2B6CB0] transitio hover:bg-[#2B6CB0] hover:text-white"
           >
             Sign out
           </button>
         </div>
       </aside>
 
-      <!-- Main -->
       <div class="flex flex-1 flex-col overflow-hidden">
 
-        <!-- Navbar -->
         <header class="relative flex h-16 items-center justify-between bg-white px-6">
           <div class="flex items-center gap-3">
 
-            <!-- Hamburger (mobile only) -->
             <button
               id="sidebar-toggle"
               class="rounded-lg p-2 hover:bg-neutral-100 lg:hidden"
@@ -104,16 +103,10 @@ import "../styles/global.css";
                 />
               </svg>
             </button>
-
-            <span class="hidden text-sm font-semibold lg:block">
-              Dashboard
-            </span>
           </div>
 
-          <!-- User info -->
           <div id="dashboard-user" class="flex items-center"></div>
 
-          <!-- Gradient border -->
           <div
             class="absolute bottom-0 left-0 h-0.5 w-full
                    bg-[linear-gradient(to_right,#ED8936,#2B6CB0)]
@@ -125,7 +118,6 @@ import "../styles/global.css";
           <script src="../scripts/dashboard-sidebar.ts"></script>
         </header>
 
-        <!-- Content -->
         <main class="flex-1 overflow-y-auto p-6">
           <slot />
         </main>

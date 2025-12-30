@@ -67,7 +67,7 @@ export function getToken(): string | null {
   return localStorage.getItem("jwt");
 }
 
-async function fetchMe(jwt: string) {
+export async function fetchMe(jwt: string) {
   const res = await fetch(
     `${STRAPI_URL}/users/me?populate[author][populate]=avatar`,
     {
