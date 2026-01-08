@@ -1,0 +1,126 @@
+---
+import type { Author } from "../types";
+import AuthorCard from "./AuthorCard.astro";
+
+export interface Props {
+  authors: Author[];
+  pageSize: number;
+  pageCount: number;
+}
+
+const { authors, pageSize, pageCount } = Astro.props;
+const STRAPI_URL = import.meta.env.PUBLIC_STRAPI_URL;
+---
+
+<section class="mx-auto max-w-7xl px-4 py-12">
+  <header class="mb-8">
+    <h2 class="text-2xl font-bold text-[#2B6CB0]">Authors</h2>
+    <p class="mt-1 text-lg text-zinc-600">
+      Meet our talented authors
+    </p>
+  </header>
+
+  <div class="flex items-center gap-4">
+    <button id="prev-button" class="p-2 bg-gray-200 rounded-full hover:bg-gray-300 disabled:opacity-50" disabled>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+    <div id="authors-grid" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 flex-grow">
+      {authors.map((author) => (
+        <AuthorCard author={author} />
+      ))}
+    </div>
+    <button id="next-button" class="p-2 bg-gray-200 rounded-full hover:bg-gray-300 disabled:opacity-50">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  </div>
+
+  <template id="author-card-template">
+    <article class="group overflow-hidden rounded-lg border border-zinc-200 bg-white text-center transition hover:shadow-lg">
+        <a href="" class="author-link block h-full p-6">
+            <div class="relative mx-auto h-24 w-24 overflow-hidden rounded-full bg-zinc-100">
+                <img class="author-avatar h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" src="https://via.placeholder.com/96x96?text=No+Image" />
+            </div>
+            <div class="mt-4">
+                <h3 class="author-name text-lg font-semibold text-[#2B6CB0] group-hover:underline"></h3>
+                <p class="author-stories text-sm text-zinc-500"></p>
+            </div>
+        </a>
+    </article>
+  </template>
+</section>
+
+<script define:vars={{ pageSize, pageCount, strapiUrl: STRAPI_URL }}>
+  let currentPage = 1;
+  const grid = document.getElementById('authors-grid');
+  const prevButton = document.getElementById('prev-button');
+  const nextButton = document.getElementById('next-button');
+  const template = document.getElementById('author-card-template');
+
+  function updateButtons() {
+    prevButton.disabled = currentPage === 1;
+    nextButton.disabled = currentPage === pageCount;
+  }
+
+  async function loadPage(page) {
+    if (page < 1 || page > pageCount || !grid) return;
+
+    try {
+        const res = await fetch(
+            `${strapiUrl}/authors` +
+            `?pagination[page]=${page}` +
+            `&pagination[pageSize]=${pageSize}` +
+            `&populate[avatar]=true&populate[stories]=true`
+        );
+        const json = await res.json();
+
+        grid.innerHTML = '';
+
+        json.data.forEach(author => {
+            const card = template.content.cloneNode(true);
+            const link = card.querySelector('.author-link');
+            if (link) link.href = `/authors/${author.id}`;
+            
+            const avatar = card.querySelector('.author-avatar');
+
+            if (avatar) {
+              if (author.avatar && author.avatar.url) {
+                avatar.src = author.avatar.url.startsWith('http') ? author.avatar.url : `${strapiUrl}${author.avatar.url}`;
+              } else {
+                avatar.src = "https://via.placeholder.com/96x96?text=No+Image";
+              }
+            }
+
+            const nameEl = card.querySelector('.author-name');
+            if (nameEl) nameEl.textContent = author.name;
+
+            const storiesEl = card.querySelector('.author-stories');
+            if (storiesEl) storiesEl.textContent = `${author.stories?.length || 0} stories`;
+            
+            grid.appendChild(card);
+        });
+
+        currentPage = page;
+        updateButtons();
+    } catch (err) {
+        console.error('Failed to load authors', err);
+    }
+  }
+
+  prevButton.addEventListener('click', () => {
+    if (currentPage > 1) {
+      loadPage(currentPage - 1);
+    }
+  });
+
+  nextButton.addEventListener('click', () => {
+    if (currentPage < pageCount) {
+      loadPage(currentPage + 1);
+    }
+  });
+
+  updateButtons();
+</script>

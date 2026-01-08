@@ -1,0 +1,56 @@
+---
+import AuthorsGrid from '../../components/AuthorsGrid.astro';
+import Layout from '../../layouts/Layout.astro';
+import StoryRow from '../../components/StoryRow.astro';
+
+import { client } from '../../lib/strapi';
+import type { Author, Story } from "../../types";
+
+const PAGE_SIZE = 12;
+
+const authorsRes = await client.collection('authors').find({
+  populate: {
+    avatar: true,
+    stories: true,
+  },
+  sort: ['name:asc'],
+  pagination: { page: 1, pageSize: PAGE_SIZE },
+});
+
+const storiesRes = await client.collection('stories').find({
+  populate: {
+    coverImage: true,
+    author: {
+        populate: ['avatar', 'stories']
+    },
+  },
+  sort: ['publishedAt:desc', 'views:desc'],
+  pagination: { page: 1, pageSize: 3 },
+});
+
+const authors = authorsRes.data as Author[];
+const stories = storiesRes.data as Story[];
+const pagination = authorsRes.meta.pagination;
+---
+
+<Layout>
+  <section class="mx-auto max-w-7xl px-4 py-12">
+    <header class="mb-8">
+      <h2 class="text-2xl font-bold text-[#2B6CB0]">Latest and Most Read Stories</h2>
+      <p class="mt-1 text-lg text-zinc-600">
+        Check out our most popular stories
+      </p>
+    </header>
+    <div class="flex flex-col gap-8">
+      {stories.map((story, index) => (
+        <StoryRow story={story} reverse={index % 2 !== 0} />
+      ))}
+    </div>
+  </section>
+
+	<AuthorsGrid
+		authors={authors}
+		pageSize={PAGE_SIZE}
+		pageCount={pagination?.pageCount ?? 0}
+	/>
+</Layout>

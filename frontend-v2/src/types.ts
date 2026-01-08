@@ -3,6 +3,11 @@ export interface Author {
   documentId: string;
   name: string;
   email?: string;
+  avatar: CoverImage | null;
+  stories?: Story[];
+  x?: string;
+  instagram?: string;
+  linkedin?: string;
   createdAt: string;
   updatedAt: string;
   publishedAt?: string;

@@ -1,0 +1,80 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { client } from '../../lib/strapi';
+import type { Author } from '../../types';
+
+export async function getStaticPaths() {
+  const authorsRes = await client.collection('authors').find();
+
+  if (!authorsRes.data) {
+    return [];
+  }
+
+  const paths = authorsRes.data.map((author) => {
+    return {
+      params: { id: author.id.toString() },
+    };
+  });
+
+  return paths;
+}
+
+const { id } = Astro.params;
+
+const authorRes = await client.collection('authors').findOne(id, {
+    populate: {
+        avatar: true,
+        stories: {
+            populate: ['coverImage']
+        },
+        x: true,
+        instagram: true,
+        linkedin: true,
+    }
+});
+
+const author = authorRes.data as Author;
+---
+<Layout>
+    <main class="mx-auto max-w-4xl py-12 px-4">
+        <div class="flex items-center gap-6">
+            {author.avatar && (
+                 <img src={author.avatar.url} alt={author.name} class="h-24 w-24 rounded-full object-cover" />
+            )}
+            <div>
+                <h1 class="text-3xl font-bold">{author.name}</h1>
+                <p class="text-zinc-500">{author.stories?.length || 0} stories</p>
+                <div class="mt-2 flex gap-3">
+                    {author.x && (
+                      <a href={author.x} target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
+                        <img src="https://simpleicons.org/icons/x.svg" alt="X" class="h-5 w-5" />
+                      </a>
+                    )}
+                    {author.instagram && (
+                      <a href={author.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                        <img src="https://simpleicons.org/icons/instagram.svg" alt="Instagram" class="h-5 w-5" />
+                      </a>
+                    )}
+                    {author.linkedin && (
+                      <a href={author.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <img src="https://simpleicons.org/icons/linkedin.svg" alt="LinkedIn" class="h-5 w-5" />
+                      </a>
+                    )}
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-12">
+            <h2 class="text-2xl font-bold">Stories by {author.name}</h2>
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                {author.stories && author.stories.map(story => (
+                    <a href={`/stories/${story.slug}`} class="group block rounded-lg border p-4 hover:bg-zinc-50">
+                        {story.coverImage && <img src={story.coverImage.url} alt={story.title} class="mb-4 h-40 w-full rounded object-cover" />}
+                        <h3 class="font-semibold group-hover:underline">{story.title}</h3>
+                        <p class="text-sm text-zinc-600 line-clamp-2">{story.excerpt}</p>
+                    </a>
+                ))}
+            </div>
+        </div>
+    </main>
+</Layout>

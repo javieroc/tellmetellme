@@ -1,0 +1,49 @@
+---
+import type { Author } from '../types';
+import { getStrapiMedia } from '../lib/strapi';
+
+export interface Props {
+  author: Author;
+}
+
+const { author } = Astro.props;
+const authorName = author.name ?? 'Unknown author';
+const authorImage = getStrapiMedia(author.avatar?.url);
+---
+
+<article class="group overflow-hidden rounded-lg border border-zinc-200 bg-white text-center transition hover:shadow-lg">
+  <a href={`/authors/${author.id}`} class="block h-full p-4">
+    <div class="relative mx-auto h-32 w-32 overflow-hidden rounded-full bg-zinc-100">
+      <img
+        src={authorImage ?? 'https://via.placeholder.com/96x96?text=No+Image'}
+        alt={authorName}
+        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="mt-4">
+      <h3 class="text-lg font-semibold text-[#2B6CB0] group-hover:underline">
+        {authorName}
+      </h3>
+      <p class="text-sm text-zinc-500">{author.stories?.length || 0} stories</p>
+      <div class="mt-2 flex justify-center gap-3">
+        {author.x && (
+          <a href={author.x} target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
+            <img src="https://simpleicons.org/icons/x.svg" alt="X" class="h-5 w-5" />
+          </a>
+        )}
+        {author.instagram && (
+          <a href={author.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <img src="https://simpleicons.org/icons/instagram.svg" alt="Instagram" class="h-5 w-5" />
+          </a>
+        )}
+        {author.linkedin && (
+          <a href={author.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <img src="https://simpleicons.org/icons/linkedin.svg" alt="LinkedIn" class="h-5 w-5" />
+          </a>
+        )}
+      </div>
+    </div>
+  </a>
+</article>

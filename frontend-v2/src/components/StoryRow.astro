@@ -1,0 +1,87 @@
+---
+import type { Story } from '../types';
+import { getStrapiMedia } from '../lib/strapi';
+
+export interface Props {
+  story: Story;
+  reverse?: boolean;
+}
+
+const { story, reverse = false } = Astro.props;
+
+const authorName = story.author?.name ?? 'Unknown author';
+const authorImage = getStrapiMedia(story.author?.avatar?.url);
+
+---
+
+<div class:list={["flex flex-col md:flex-row items-stretch bg-white border border-zinc-200 p-6 gap-6", { "md:flex-row-reverse": reverse }]}>
+  <div class="md:w-3/5">
+    <a href={`/stories/${story.slug}`} class="block h-full">
+      <div class="relative aspect-video overflow-hidden bg-zinc-100 h-full">
+        {story.coverImage?.url ? (
+          <img
+            src={story.coverImage.url}
+            alt={story.title}
+            class="h-full w-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <div class="flex h-full w-full items-center justify-center text-sm text-zinc-400">
+            No image
+          </div>
+        )}
+      </div>
+    </a>
+  </div>
+
+  <div class="md:w-2/5 flex flex-col">
+    <a href={`/stories/${story.slug}`} class="block">
+      <h3 class="text-2xl font-bold leading-snug text-[#2B6CB0] hover:underline">
+        {story.title}
+      </h3>
+      <p class="mt-2 line-clamp-4 text-base text-zinc-600">
+        {story.excerpt}
+      </p>
+    </a>
+
+    <div class="mt-4 flex items-center gap-4">
+      <a href={`/authors/${story.author?.id}`}>
+        <img
+          src={authorImage ?? 'https://via.placeholder.com/96x96?text=No+Image'}
+          alt={authorName}
+          class="h-12 w-12 rounded-full bg-zinc-100 object-cover transition-transform duration-500 group-hover:scale-105"
+          loading="lazy"
+        />
+      </a>
+      <div>
+        <a href={`/authors/${story.author?.id}`} class="block">
+          <h4 class="text-lg font-semibold text-[#2B6CB0] hover:underline">{authorName}</h4>
+        </a>
+        <p class="text-sm text-zinc-500">{story.author?.stories?.length || 0} stories</p>
+        <div class="mt-1 flex gap-2">
+          {story.author?.x && (
+            <a href={story.author.x} target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
+              <img src="https://simpleicons.org/icons/x.svg" alt="X" class="h-4 w-4" />
+            </a>
+          )}
+          {story.author?.instagram && (
+            <a href={story.author.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <img src="https://simpleicons.org/icons/instagram.svg" alt="Instagram" class="h-4 w-4" />
+            </a>
+          )}
+          {story.author?.linkedin && (
+            <a href={story.author.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <img src="https://simpleicons.org/icons/linkedin.svg" alt="LinkedIn" class="h-4 w-4" />
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <a href={`/stories/${story.slug}`} class="inline-block bg-[#2B6CB0] text-white px-4 py-2 rounded-md hover:bg-[#1A4B7D] transition-colors">
+        Read More
+      </a>
+    </div>
+  </div>
+</div>
