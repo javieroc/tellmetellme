@@ -26,7 +26,7 @@ const STRAPI_URL = import.meta.env.PUBLIC_STRAPI_URL;
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
       </svg>
     </button>
-    <div id="authors-grid" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 flex-grow">
+    <div id="authors-grid" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grow">
       {authors.map((author) => (
         <AuthorCard author={author} />
       ))}
@@ -39,16 +39,25 @@ const STRAPI_URL = import.meta.env.PUBLIC_STRAPI_URL;
   </div>
 
   <template id="author-card-template">
-    <article class="group overflow-hidden rounded-lg border border-zinc-200 bg-white text-center transition hover:shadow-lg">
-        <a href="" class="author-link block h-full p-6">
-            <div class="relative mx-auto h-24 w-24 overflow-hidden rounded-full bg-zinc-100">
-                <img class="author-avatar h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" src="https://via.placeholder.com/96x96?text=No+Image" />
-            </div>
-            <div class="mt-4">
-                <h3 class="author-name text-lg font-semibold text-[#2B6CB0] group-hover:underline"></h3>
-                <p class="author-stories text-sm text-zinc-500"></p>
-            </div>
-        </a>
+    <article class="group p-4 flex flex-col items-center rounded-sm border border-zinc-200 bg-white text-center transition hover:shadow-lg">
+      <img class="author-avatar h-32 w-32 rounded-full bg-zinc-100 object-cover" loading="lazy" src="https://via.placeholder.com/96x96?text=No+Image" alt="" />
+      <div class="mt-2">
+          <a href="" class="author-link">
+            <h3 class="author-name text-lg font-semibold text-[#2B6CB0] group-hover:underline"></h3>
+          </a>
+          <p class="author-stories text-sm text-zinc-500"></p>
+          <div class="mt-2 flex justify-center gap-3 social-icons">
+              <a href="" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)" class="social-x hidden">
+                <img src="/social/x.svg" alt="X" class="h-4 w-4" />
+              </a>
+              <a href="" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-instagram hidden">
+                <img src="/social/instagram.svg" alt="Instagram" class="h-4 w-4" />
+              </a>
+              <a href="" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="social-linkedin hidden">
+                <img src="/social/linkedin.svg" alt="LinkedIn" class="h-4 w-4" />
+              </a>
+          </div>
+      </div>
     </article>
   </template>
 </section>
@@ -85,8 +94,8 @@ const STRAPI_URL = import.meta.env.PUBLIC_STRAPI_URL;
             if (link) link.href = `/authors/${author.id}`;
             
             const avatar = card.querySelector('.author-avatar');
-
             if (avatar) {
+              avatar.alt = author.name ?? 'Unknown author'; // Set alt attribute
               if (author.avatar && author.avatar.url) {
                 avatar.src = author.avatar.url.startsWith('http') ? author.avatar.url : `${strapiUrl}${author.avatar.url}`;
               } else {
@@ -99,6 +108,23 @@ const STRAPI_URL = import.meta.env.PUBLIC_STRAPI_URL;
 
             const storiesEl = card.querySelector('.author-stories');
             if (storiesEl) storiesEl.textContent = `${author.stories?.length || 0} stories`;
+
+            // Handle social icons
+            const socialX = card.querySelector('.social-x');
+            if (socialX && author.x) {
+                socialX.href = author.x;
+                socialX.classList.remove('hidden');
+            }
+            const socialInstagram = card.querySelector('.social-instagram');
+            if (socialInstagram && author.instagram) {
+                socialInstagram.href = author.instagram;
+                socialInstagram.classList.remove('hidden');
+            }
+            const socialLinkedin = card.querySelector('.social-linkedin');
+            if (socialLinkedin && author.linkedin) {
+                socialLinkedin.href = author.linkedin;
+                socialLinkedin.classList.remove('hidden');
+            }
             
             grid.appendChild(card);
         });

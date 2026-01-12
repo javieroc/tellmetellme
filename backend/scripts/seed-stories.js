@@ -103,6 +103,9 @@ async function seedAuthors(avatarImage, count = 10) {
           connect: user.id,
         },
         avatar: avatarImage.id,
+        x: `https://twitter.com/${username}`,
+        instagram: `https://instagram.com/${username}`,
+        linkedin: `https://linkedin.com/in/${username}`,
       },
     });
 
@@ -157,7 +160,7 @@ async function main() {
 
   const coverImage = await createCoverImage();
   const avatarImage = await createAvatarImage();
-  const authors = await seedAuthors(avatarImage, 10);
+  const authors = await seedAuthors(avatarImage, 30);
   await seedStories(authors, coverImage, 100);
 
   await app.destroy();

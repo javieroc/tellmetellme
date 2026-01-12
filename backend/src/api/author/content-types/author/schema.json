@@ -45,6 +45,15 @@
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user",
       "mappedBy": "author"
+    },
+    "x": {
+      "type": "string"
+    },
+    "instagram": {
+      "type": "string"
+    },
+    "linkedin": {
+      "type": "string"
     }
   }
 }
